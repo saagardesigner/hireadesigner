@@ -1,0 +1,1785 @@
+@mixin fontFace($fontname) 
+    @font-face
+        font-family: $fontname
+        src: url('../fonts/'+$fontname+'.eot')
+        src: url('../fonts/'+$fontname+'.eot?#iefix') format('embedded-opentype'), url('../fonts/'+$fontname+'.woff') format('woff'), url('../fonts/'+$fontname+'.ttf') format('truetype'), url('../fonts/'+$fontname+'.svg#fontname') format('svg')
+        font-weight: normal
+        font-style: normal
+    
+@mixin doAnimate($property,$delay,$feel,$time)
+    -webkit-transition: $property $delay $feel $time
+    -moz-transition: $property $delay $feel $time
+    -o-transition: $property $delay $feel $time
+    transition: $property $delay $feel $time
+
+@mixin background-img($imgName,$lPos,$rPos,$size)
+    background-image: url($imgName)
+    background-repeat:  no-repeat
+    background-position:    $lPos $rPos
+    @if $size != null
+        background-size:    $size 
+        
+    
+@mixin  subNavBack($count,$lPos,$rPos,$size)
+    @for $i from 1 through $count
+        li:nth-Child(#{$i}) a
+            @include background-img('../imgs/logo.svg',-($i - 1)*$lPos,$rPos,$size)
+            
+        
+@mixin subNav-back-pos($count,$lPos,$rPos)
+    @for $i from 1 through $count
+        li:nth-Child(#{$i}) a span
+            background-position:   -($i - 1)*$lPos   $rPos
+        
+        
+@mixin wnh($w,$h)
+    width:  $w
+    height: $h
+    
+@mixin setPos($pos,$top,$left)
+    position:   $pos
+    top:    $top
+    left:   $left
+    
+@mixin setRightPos($pos,$top,$right)
+    position:   $pos
+    top:    $top
+    right:   $right
+    
+
+
+@mixin  linx($link,$visit,$hover,$active)
+    a
+        color:  $link
+        cursor: pointer
+        &:visited
+            color:  $visit
+            background: #e2e8ed
+        &:hover
+            color:  $hover
+            background: #e2e8ed
+            border-radius:  3em
+            
+        &:active
+            color:  $active
+
+@mixin on-circle($item-count,$deg, $circle-size, $width, $height, $item-size,$item-x,$item-y, $bg-size,$bg-img-size,$bg-img-x,$bg-img-y,$pad,$rowSize,$border-radius) 
+    position: relative
+    width:  $width
+    height: $height
+    margin: 0 auto
+    padding: $pad 0
+    border-radius: $border-radius
+    list-style: none
+    background: url(../imgs/logo.svg) no-repeat $bg-img-x $bg-img-y
+    background-size: $bg-img-size
+    transform:  translateY(2em)
+    &:after
+        content:    ""
+        width:  94%
+        height: 94%
+        position:   absolute
+        left:   3.2%
+        top:    3.2%
+        box-shadow: 0px 0px 45px rgba(0,0,0,0.08)
+        border-radius: $border-radius
+    > *
+        display: block
+        position: absolute
+        top:  50%
+        left: 50%
+        width:  $item-size
+        height: $item-size
+        margin: -($item-size / 2)
+            
+   
+    $angle: (360 / $item-count)
+    $rot: $deg
+    
+    @for $i from 1 through $item-count 
+        li:nth-of-type(#{$i})
+            background: url(../imgs/logo.svg) no-repeat $item-x * $i $item-y+$rowSize
+            transform: rotate($rot * 1deg) translate($circle-size / 2) rotate($rot * -1deg)
+            background-size: $bg-size
+            $rot: $rot + $angle
+    
+@mixin on-circle-responsive($item-count, $item-x,$item-y,$backSize)
+    @for $i from 1 through $item-count 
+        li:nth-of-type(#{$i})
+            &:after
+                content:    ""
+                background: url(../imgs/logo-res.svg) no-repeat
+                background-position:    $item-x * $i $item-y
+                background-size: $backSize
+                
+
+@mixin dropdown($num)
+    @for $i from 1 through $num
+        li:nth-Child(#{$i})
+            width:  100% / $num
+        li:nth-Child(#{$i}) a
+            background: url(../imgs/logo.svg) no-repeat
+            background-position: -($i - 1)*8em   -29em
+            background-size:    52em
+            width:  8em
+            margin: 0 auto
+
+
+
+@mixin portSlider($frames, $static, $animation-name)
+    $animating: (100% - $frames * $static) / ($frames - 1)
+
+    @for $i from 1 through $frames
+        figure:nth-of-type(#{$i})
+            left:   $i  * 100%  - 100%
+
+    @keyframes #{$animation-name}
+        @for $i from 0 to $frames
+            $current-frame: $i * $static + $i * $animating
+            $next-frame: ($i + 1) * $static + $i * $animating
+            
+            #{$current-frame}
+                left:   $i * -100%
+            
+    animation:  $animation-name 8s infinite
+    -webkit-animation:  $animation-name 8s  infinite
+    -o-animation:   $animation-name 8s  infinite
+    -moz-animation: $animation-name 8s  infinite
+
+
+@mixin clientSlider($frames, $static, $animation-name)
+    $animating: (100% - $frames * $static) / ($frames - 1)
+    @keyframes #{$animation-name}
+        @for $i from 0 to $frames
+            $current-frame: $i * $static + $i * $animating
+            $next-frame: ($i + 1) * $static + $i * $animating
+            #{$current-frame}
+                left:   $i * -100%
+            
+    animation:  $animation-name 16s infinite
+    -webkit-animation:  $animation-name 16s  infinite
+    -o-animation:   $animation-name 16s  infinite
+    -moz-animation: $animation-name 16s  infinite
+
+@mixin gradientBack($color1,$color2)
+    background: $color1
+    background: -webkit-linear-gradient(left bottom, $color1, $color2)
+    background: -o-linear-gradient(bottom left, $color1, $color2)
+    background: -moz-linear-gradient(bottom left, $color1, $color2)
+    background: linear-gradient(to bottom left, $color1, $color2)
+
+@mixin transition()
+    -webkit-transition: 0.2s ease
+    transition: 0.2s ease
+
+@mixin arrow($direction,$color,$val)
+    @if $direction  ==  top
+        border-left:    $val solid transparent
+        border-right:    $val solid transparent
+        border-bottom:    $val solid $color
+        border-top:    $val solid transparent
+    @else if $direction == right
+        border-left:    $val solid $color
+        border-right:    $val solid transparent
+        border-bottom:    $val solid transparent
+        border-top:    $val solid transparent
+    @else if $direction == left
+        border-left:    $val solid transparent
+        border-right:    $val solid $color
+        border-bottom:    $val solid transparent
+        border-top:    $val solid transparent
+    @else
+        border-left:    $val solid transparent
+        border-right:    $val solid transparent
+        border-bottom:    $val solid transparent
+        border-top:    $val solid $color   
+    
+/* Common */
+html,
+body,
+ul,
+ol
+    margin: 0
+    padding: 0
+    
+
+ul,
+li
+    list-style: none
+
+button:focus
+    outline:  0
+
+form
+    color:  #999
+    position: relative
+
+form 
+    input:not([type]), input[type=text], input[type=email], input[type=search], input[type=password], input[type=date], input[type=datetime-local], input[type=tel], input[type=time], input[type=file], input[type=url], input[type=number], textarea
+        border: 0
+        border-bottom: 1px solid #d1d1d1
+        padding: 0.5em
+        box-sizing: border-box
+        margin: 0.5em 0
+        @extend .nBox
+        color:  #999
+    input:focus,textarea:focus
+        border: 0
+        border-bottom: 1px solid red
+        outline-width:  0
+    button[type=submit],    button[type=submit]:focus
+        background: none
+        @include wnh(4.5em,4.5em)
+        @include background-img('../imgs/logo.svg',-27.8em,-101.3em,129em)
+        background-size: 129em
+        border: 0
+        outline-width: 0
+        
+
+
+$yellow:    #fec021
+$red:   #f1503f
+$blue:  #00a9e7
+$purple:    #ca49ef
+$orange:    #f88e31
+$green: #58bc4b
+$color: ($yellow,$red,$blue,$purple,$orange,$green)
+
+$font-stack:    'proxima'
+$light-font:'proxima_light'
+$bold-font:'proxima-nova-bold'
+$primary-color: #000
+$base-font-size: 15px
+$border-color:  #e2e8ed
+$light-gray-background: #ededed
+$smallBreak: 500px
+$desktopW:  1000px
+$white: #ffffff
+$input-color: #333333
+
+@include fontFace($fontname:$font-stack)
+@include fontFace($fontname:$light-font)
+@include fontFace($fontname:$bold-font)
+
+body
+    font: 1em $font-stack
+    color: $primary-color
+    font-size: $base-font-size
+    letter-spacing: 0.05em
+    overflow-x:   hidden
+    font-weight: normal
+
+a
+    text-decoration:    none
+
+.center-text-align
+    text-align: center
+
+.left-text-align
+    text-align: left
+
+.right-text-align
+    text-align: right      
+
+h1,h2,h3
+    font-family:    $light-font
+    font-weight: normal
+    margin: 0
+h1
+    font-size: 5em
+h2
+    font-size: 2.2em
+    padding:    0.3em
+.h2down
+    display: block
+    width: 36%
+    @extend .center-text-align
+    padding: 0 32%
+    color:  #666
+h3
+    font-size: 1.5em
+    padding:    0.5em 0  
+
+.section
+    @extend .center-text-align
+
+.sectionWPadding
+    padding:    6em 0
+    clear:  both    
+
+.wrapper
+    @include wnh($desktopW,100%)
+    margin: 0 auto
+
+.wrapper:after
+    content:    ""
+    clear:  both
+
+.nBox
+    width:  100%
+
+.nBox-2
+    width:  50%
+
+.nBox-3
+    width:  33.33%
+
+.nBox-4
+    width:  25%
+
+ul.point
+    overflow:   auto
+    li
+        box-sizing: border-box
+        float:  left
+span.title
+    font: 1em $bold-font
+    display:    block
+    margin-bottom: 1em
+    height: auto
+
+.noPadding
+    padding: 0
+    
+.clicked-link
+    background: $border-color
+    border-radius:  3em
+    
+.top-border
+    border-top: 1px solid #c7c7c7
+
+.bottom-border
+    border-bottom:  1px solid $primary-color  
+
+.grayBack
+    background: #ededed
+    color:  #666
+
+#menu-bar, .menuBut, #canvas
+    position:   absolute
+
+#menu-bar
+    position:   fixed
+    z-index:    99
+    border-bottom: 1px solid #f1f1f1
+
+#menu-bar, #menu-bar a
+    background: #fff
+    top:        0
+    left:       0
+    width:      100%
+    color:      $primary-color
+    /*text-transform: uppercase*/
+    
+    .logo
+        padding: 0.4em 0 0.4em 0.4em
+        float: left
+
+    .contact
+        width: 10em
+        position: absolute
+        @extend .center-text-align
+        line-height: 2em  
+
+    .menuWrap
+        float:  right
+        
+        .menu
+            float:  left   
+            li
+                float: left
+                .dropdown
+                    position:   absolute
+                    width:  100%
+                    padding:    2em 0
+                    background: #fff
+                    left:   0
+                    display:    none
+                    @extend .top-border
+                    border-color: #f1f1f1
+                    box-shadow: 1px 2px 4px rgba(0,0,0,0.2)
+                    ul
+                        width:  80%
+                        display:    block
+                        overflow:   auto
+                        margin: 0 auto
+                        @include subNavBack(5,7.75em,-27em,49em)
+                        li
+                            width:  20%
+                            text-align: center
+                            overflow:   hidden
+                        a
+                            color:  #999
+                            @extend .center-text-align
+                            padding:    0
+                            height: 6em
+                            width:  6em
+                            margin: 0 auto
+                    
+                .dropdown:hover
+                    display:    block
+                a
+                    padding: 18px
+                    display: block
+                    box-sizing: border-box
+                    &:hover+.dropdown
+                        display:    block
+        .contact
+            padding: 1em
+            border: 1px solid #333
+            float: left
+        .iconMenu
+            float: left
+            @include subNav-back-pos(4,30px,0)
+            
+            li
+                float: left
+                a
+                    padding: 16px 10px
+                    display: block
+                    box-sizing: border-box
+                    span
+                        @include background-img('../imgs/icon-sprite.png',0em,0em,12em)
+                        display:    block
+                        @include wnh(24px,22px)
+    
+    .menuBut
+        background: #550043
+        @include wnh(50px,50px)
+        top: 0
+        right: -50px
+        display: none
+        span
+            @include background-img('../imgs/icon-sprite.png',-112px,14px,10em)
+            @include wnh(100%,100%)
+            display:    block
+        
+#canvas
+    background: #999
+    @include wnh(100%,100%)
+    @include doAnimate(all,700ms,ease,0s)
+
+@media all and (min-width:960px)
+    #menu-bar
+        .menuWrap
+            margin-right:   11em
+        .contact
+            width: 10em
+            right: 1em
+            border: 1px solid #999
+            border-radius: 5em
+            top: 0.8em 
+
+@media all and (max-width:960px)
+    $base-font-size: 14px
+    h1
+        font-size:  2em
+    .h2down
+        width: 70%
+        padding: 0 15%
+    .wrapper
+        width:  96%
+        padding: 0 2%
+
+    .sectionWPadding
+        padding:    2em 0
+    
+    #menu-bar
+        @include doAnimate(all,700ms,ease,0s)
+        height: 100%
+        width:  60%
+        .menu
+            li
+                width:  100%
+        .menuBut
+            display:    block
+
+@media all and (min-width:  320px) and (max-width: 567px)
+    body
+        font-size: 15px
+     
+
+            
+/* Common completed */
+
+/* Main Page */
+#fullpage
+    .bannerSection
+        background: #792266
+        background-size:    cover
+        @include wnh(100%,100%)
+        position:   absolute
+        top:    0
+        color:  white
+        
+    .gSection, .cSection
+        @include doAnimate(all,700ms,ease,0s)
+        @extend .bannerSection
+        .face
+            position:   absolute
+            top:    12%
+        h1
+            color:  white
+            @include setRightPos(absolute,50%,65%)
+            font-size:  7em
+            transform:  translateY(-100%)
+        p
+            width:  30%
+            @extend .right-text-align
+            @include setRightPos(absolute,50%,65%)
+    
+    .cSection
+        background: #5a104a
+        h1
+            @include setPos(absolute,50%,65%)
+        p
+            text-align: left !important
+            @include setPos(absolute,50%,65%)
+        
+    .services
+        background: #f8fafb !important
+        .sliderContainer
+            @include doAnimate(all,700ms,ease,0s)
+            width:  500%
+            clear:  both
+            position: relative
+            .mobileserviceLogo,.webserviceLogo,.cmsserviceLogo,.brandingserviceLogo, .uiserviceLogo
+                float:    left
+                width:  25%
+                position: relative
+                
+        span
+            display:    inline-block
+            @include linx(#333,#666,#333,#000)    
+            a
+                margin: 0 0.5em
+                padding:    0.5em 1.3em
+                border: 1px solid $border-color
+                border-radius:  3em
+                display:    inline-block
+        h3
+            position:   absolute
+            top: 56%
+            left: 50%
+            color: #fff
+            width:  6em
+            transform: translate(-50%,-50%)
+            padding:    0
+            margin: 0
+            @extend .center-text-align
+    
+    .work
+        position: relative
+        clear:  both
+        .portimg
+            position:   absolute
+            height: 60%
+            .overlay
+                @include doAnimate(all,700ms,ease,0s)
+                display:    block
+                @include wnh(100%,100%)
+                position:   absolute
+                top:    100%
+                background: rgba(0,0,0,0.8)
+                    
+            figure
+                @extend .nBox-2
+                height: 50%
+                width:  25%
+                float:  left
+                margin: 0
+                position:   relative
+                overflow:   hidden
+                transform:  scale(1)
+                &:hover .overlay
+                    top:    0
+                img
+                    @extend .nBox
+                span
+                    display:    block
+                    @include wnh(5em,5em)
+                    background: url(../imgs/logo.svg) no-repeat
+                    background-size: 60em
+                    background-position: -36.5em 0.5em
+                    margin: 0 auto
+                    position:   relative
+                    top:    calc(50% - 2em)
+    
+    .testimonial
+        position:   relative
+        .testimonialWrapper
+            position:   absolute
+            bottom: 2em
+            height: 60%
+            left:   calc(50% - 500px)
+            $colors-list: #420629 #85014e #62063c #a6166b
+            @each $current-color in $colors-list
+                $i: index($colors-list, $current-color)
+                figure:nth-Child(#{$i})
+                    background: $current-color
+            figure
+                @extend .left-text-align  
+                @include wnh(25%,100%)
+                overflow:   auto
+                margin: 0
+                float:  left
+                overflow:   hidden
+                
+                color:  #fff
+                img
+                    height: 50%
+                figcaption
+                    padding:    2em
+                    box-sizing: border-box
+                    height: 50%
+    .client
+        position:   relative
+        background: url(../imgs/wov.png) repeat 0 0
+        h2
+            color:  #fff
+        .clientWrapper
+            position:   relative
+            top: 5vh
+            height: 66vh
+            @for $i from 1 through 9
+                li:nth-Child(#{$i})
+                    border: 1px solid rgba(255,255,255,0.08)
+                    &:after
+                        content:    ""
+                        position:   absolute
+                        left:   calc(50% - 6em)
+                        top:    calc(50% - 4em)
+                        width:  12em
+                        height: 8em
+                        background: url(../imgs/logo.svg) no-repeat 0 0
+                        background-position:   -($i - 1)* 20em   -146.5em
+                        background-size:    200em
+            li:nth-Child(1),li:nth-Child(2),li:nth-Child(3)
+                border-top:    0
+            li:nth-Child(7),li:nth-Child(8),li:nth-Child(9)
+                border-bottom:    0
+            li:nth-Child(1),li:nth-Child(4),li:nth-Child(7)
+                border-left:    0
+            li:nth-Child(3),li:nth-Child(6),li:nth-Child(9)
+                border-right:   0
+                        
+footer.sectionWPadding
+    @extend .left-text-align
+    padding:    5em !important
+    background: #f5f5f5
+    p
+        @extend .nBox
+        display: block
+        @extend .center-text-align
+        font-size: 2em
+        border-bottom: 1px solid rgba(0,0,0,0.1)
+        padding-bottom: 2em
+        box-sizing: border-box
+    span
+        position: relative
+        top: 4.5em
+        @extend .nBox
+        display: block
+        @extend .center-text-align
+    img
+        display:    block
+        position: relative
+        top: 2em
+    .social
+        float:  right
+        @include wnh(9em,2em)
+        @include subNavBack(3,4.1em,-42.8em,55em)
+        position: relative
+        top: -1em
+        li
+            float:  left
+            margin-right:   1em
+            a
+                @include wnh(2em,2em)
+                display:    block
+
+
+@media all and (min-width:960px)
+    .services
+        .sliderContainer
+            .mobileserviceLogo,.webserviceLogo,.cmsserviceLogo,.brandingserviceLogo,.uiserviceLogo
+                .circle-container
+                    @include on-circle($item-count: 8,$deg: 24, $circle-size: 50vh,$width:72vh,$height:  72vh, $item-size: 12vh,$item-x: -10.4vh ,$item-y:  -3vh, $bg-size:   154vh,$bg-img-size:   1400vh,$bg-img-x:   1vh,$bg-img-y:    -17.6vh,$pad: 0vh,$rowSize:  -11vh,$border-radius:    50%)
+            .brandingserviceLogo
+                .circle-container
+                    @include on-circle($item-count: 8,$deg: 24, $circle-size: 50vh,$width:72vh,$height:  72vh, $item-size: 12vh,$item-x: -10.4vh ,$item-y:  -3vh, $bg-size:   154vh,$bg-img-size:   1400vh,$bg-img-x:   1vh,$bg-img-y:    -17.6vh,$pad: 0vh,$rowSize:  -11vh,$border-radius:    50%)
+            .uiserviceLogo
+                .circle-container
+                    @include on-circle($item-count: 8,$deg: 24, $circle-size: 50vh,$width:72vh,$height:  72vh, $item-size: 12vh,$item-x: -10.4vh ,$item-y:  -3vh, $bg-size:   154vh,$bg-img-size:   1400vh,$bg-img-x:   1vh,$bg-img-y:    -17.6vh,$pad: 0vh,$rowSize:  -11vh,$border-radius:    50%)        
+            .webserviceLogo
+                .circle-container
+                    @include on-circle($item-count: 8,$deg: 24, $circle-size: 50vh,$width:72vh,$height:  72vh, $item-size: 12vh,$item-x: -10.4vh ,$item-y:  -3vh, $bg-size:   154vh,$bg-img-size:   1400vh,$bg-img-x:   1vh,$bg-img-y:    -17.6vh,$pad: 0vh,$rowSize:  -11vh,$border-radius:    50%)
+            .cmsserviceLogo
+                .circle-container
+                    @include on-circle($item-count: 4,$deg: 0, $circle-size: 50vh,$width:72vh,$height:  72vh, $item-size: 12vh,$item-x: -10.5vh ,$item-y:  -3vh, $bg-size:   154vh,$bg-img-size:   1403vh,$bg-img-x:    -213vh,$bg-img-y:    -17.6vh,$pad: 0vh,$rowSize:  -11vh,$border-radius: 0%)
+            .mobileserviceLogo
+                .circle-container
+                    @include on-circle($item-count: 8,$deg: 24, $circle-size: 50vh,$width:72vh,$height:  72vh, $item-size: 12vh,$item-x: -10.4vh ,$item-y:  -3vh, $bg-size:   154vh,$bg-img-size:   1400vh,$bg-img-x:   1vh,$bg-img-y:    -17.6vh,$pad: 0vh,$rowSize:  -11vh,$border-radius:    50%)        
+                        
+            
+                        
+    .work
+        .portimg
+            bottom: 0
+
+    #fullpage
+        .gSection, .cSection
+            .face
+                height: 50%
+                top:  30%
+                
+@media all and (max-width:960px)            
+    #fullpage
+        @include doAnimate(all,700ms,ease,0s)
+        #section0
+            height: 100%
+            ul
+                width:  30%
+                li
+                    @include wnh(30px,30px)
+        
+        .services
+            .wrapper
+                width:  100%
+                padding: 0
+            padding:    0px
+            .sliderContainer
+                height: 19em
+                .mobileserviceLogo,.webserviceLogo,.cmsserviceLogo,.brandingserviceLogo
+                    padding:    0em 0em
+                    box-sizing: border-box
+                    position:   relative
+                    top:    3em
+                    ul
+                        position: relative
+                        top:    2em
+                    .circle-container
+                        width:  80%
+                        overflow:   auto
+                        margin: 0 auto
+                        @include on-circle-responsive($item-count: 8,$item-x: -11.25vw,$item-y: -13vw,$backSize:    164vw)
+                        li
+                            float: left
+                            @include wnh(20%,7em)
+                            margin: 0 2.5%
+                            position:   relative
+                        li:after
+                            display:    block
+                            position:   absolute
+                            left:   20%
+                            @include wnh(60%,90%)
+                            
+                    
+            span
+                display:    block
+                float:  left
+                width:  25%
+                line-height: 50px
+                border-bottom: 1px solid rgba(0,0,0,0.25)
+                position:   relative
+                background: #f8fafb
+                a
+                    margin: 0
+                    padding: 0
+                    border-radius:  0
+                    display:    block
+                    &:hover
+                        border-radius:  0
+                    
+            span:after
+                content:    ""
+                @include wnh(1px,50px)
+                position:   absolute
+                right:  0
+                top:    0
+                background: rgba(0,0,0,0.25)
+            h3
+                position: absolute
+                width: 90%
+                color: #999
+        .work
+            .portimg
+                padding:    2em 0
+                position:   inherit
+                figure
+                    width:  50%
+                    height: 14em
+                figure:nth-child(8)
+                    float:  none
+                
+        .testimonial 
+            .testimonialWrapper
+                position:   relative
+                height: 10em
+                padding:    2em 0
+                width: 100%
+                left: 0
+                top:    1em
+                figure
+                    width:  100%
+                    position: absolute
+                    text-align: center
+                    img
+                        width:  100%
+                        float:  left
+                    figcaption
+                        width:  100%
+                        height: 100%
+                        float:  left
+
+@media all and (min-width:  567px) and (max-width: 959px)
+    
+    #fullpage
+        .cSection, .gSection
+            h1
+                top:    50%
+                font-size: 3em
+    .testimonial
+        .testimonialWrapper
+            @include portSlider(4,12.5,'carousel')
+            figure
+                width:  100%
+    #menu-bar
+        .contact
+            left:   0
+            bottom: 0
+            width:  100%
+            background: #999
+            color:  #fff
+            text-align: left
+            text-indent:    1em 
+        
+@media all and (min-width:  568px)
+    #fullpage
+        .client
+            .clientWrapper
+                li
+                    @include wnh(33%,22vh)
+                    float:  left
+                    position:   relative
+
+@media all and (min-width:  320px) and (max-width: 567px)
+
+    #fullpage
+        .cSection, .gSection
+            h1
+                top:   50%
+                font-size: 2em
+            p
+                top:   50% 
+        .services
+            .sliderContainer
+                .mobileserviceLogo,.webserviceLogo,.cmsserviceLogo,.brandingserviceLogo
+                    padding:    0 1em
+                    .circle-container
+                        width:  100%
+                        overflow:   auto
+                        @include on-circle-responsive($item-count: 8,$item-x: -13.8vw,$item-y: -15vw,$backSize:    203vw)
+                        li
+                            float: left
+                            @include wnh(22%,5em)
+                            margin: 0 1%
+        
+        .work
+            .portimg
+                height: 24vh
+                position:   relative
+                @include portSlider(8,12.5,'carousel')
+                figure
+                    width:  100%
+                    float: none
+                    position:   absolute
+        
+        .client
+            .clientWrapper
+                height: 30vh
+                li
+                    @include wnh(100%,22vh)                    
+                    position:   absolute
+                    border: 0   !important
+                    top:    0
+
+        .testimonial
+            .testimonialWrapper
+                @include portSlider(4,12.5,'carousel')
+                figure
+                    width:  100%
+        footer.sectionWPadding
+            position: relative
+            p
+                font-size:  1em
+            
+    #menu-bar
+        .contact
+            left:   0
+            bottom: 0
+            width:  100%
+            background: #999
+            color:  #fff
+            text-align: left
+            text-indent:    1em 
+
+@media all and (min-width:  320px) and (max-width: 567px)
+    .step
+        ul
+            li
+                width:  50%
+    .why
+        .wrapper
+            height: auto
+            h2
+                width:  initial
+                text-align: center
+            ul
+                top:    0
+                li
+                    margin: 0 !important
+                    width:  100%
+    .process
+        height: auto
+        ul
+            li
+                width:  44%        
+            
+/* Main Page Completed */
+
+
+/* Design */
+
+.innerbanner
+    position:   fixed
+    overflow:   hidden
+    background: #000
+    height: 45em
+    z-index:    0
+    @extend .nBox
+    color:  #fff
+    &:before
+        content:    ""
+        @extend .nBox
+        height: 100%
+        background: url("../imgs/designBack.jpg") no-repeat center 4em
+        background-size:    126%
+        display:    block
+        position:   absolute
+        opacity:    0.7
+    .title
+        display: block
+        position: absolute
+        top: 15%
+        font-size: 4rem
+        font-weight: 100
+        left: 50%
+        transform:  translateX(-50%)
+        &:before
+            content:    ""
+            @include background-img('../imgs/logo.svg',-45.6em,-7.5em,65em)
+            @include wnh(2.5em,2.5em)
+            position: absolute
+            top: -0.6em
+            left: -2.4em
+        span
+            display:    block
+            font-size:  0.2em
+    .points
+        height: 6em
+        position: relative
+        top: 50%
+        li
+            float:  left
+            text-align: center
+            position:   relative
+            height: 7em
+            &:before
+                content:    ""
+                @include wnh(5em,4em)
+                position:   absolute
+                left:   calc(50% - 2.5em)
+                @include background-img('../imgs/logo.svg',-58.8em,-15.4em,85em)
+            span
+                position: relative
+                top: 5em
+    .hirenow
+        position:   absolute
+        bottom:    0
+        height: initial
+        @extend .nBox
+        text-align: center
+        padding:    2em 0
+        background: rgba(0,0,0,0.4)
+        p, ul,li
+            float:  left
+        p
+            @extend .nBox-2
+            padding: 0 3%
+            box-sizing: border-box
+            text-align: left
+        ul
+            li
+                @include wnh(6em,auto)
+                padding-top:    4em
+                text-align: center
+            @for $i from 0 through 3
+                li:nth-child(#{$i})
+                    @include background-img('../imgs/logo.svg',-26.2em,-78.2em,100em)
+        
+        .creform
+            transform:  translate(-3em,-3em)
+            @extend .nBox
+            height: 100%
+            border-radius: 0
+            background: #000    !important
+            transform:  translate(0,0)
+
+.wp, .psdtohtml, .magento
+    background: #fff
+    z-index:    1
+    position:   absolute
+    top:    45em
+    .sectionWPadding
+        padding:    4em 0
+    .step
+        ul
+            @each $current-color in $color
+                $i: index($color, $current-color)
+                li:nth-of-type(#{$i})
+                    &:before
+                        background: $current-color
+                    span
+                        @include background-img('../imgs/logo.svg',-76.7em - $i*6,-2.3em,117em)
+                li:hover:nth-of-type(#{$i})    
+                    span
+                        @include background-img('../imgs/logo.svg',-76.7em - $i*6,-7.6em,117em)
+            li
+                @extend .left-text-align
+                @include wnh(33.3%,16em)
+                float: left
+                padding:    3%
+                box-sizing: border-box
+                overflow:   hidden
+                position:   relative
+                margin: 2em 0
+                span
+                    @include wnh(4em,4em)
+                    display:   block
+                    margin-bottom:  2em
+                &:before
+                    z-index:    -1
+                    content:    ""
+                    position:   absolute
+                    @include wnh(90%, 0.3em)
+                    background: #000
+                    bottom: 0
+                    left:   5%
+            li:hover
+                color:  #fff
+                &:before
+                    @include transition()
+                    height: 100%
+    .why, 
+        background: $light-gray-background
+        $square-color: (1: #6f269f, 2: #ffffff, 3:#7e1f9f, 4:#ffffff, 5:#53329c, 6:#ffffff, 7:#3a3f9d, 8:#ffffff)
+        @each $i,$color in $square-color
+            ul
+                li:nth-child(#{$i})
+                    background: $color 
+
+        h2
+            @include wnh(35%, auto)
+            @extend .left-text-align
+        ul
+            position:   relative
+            top:    -7.6em
+            li
+                @include wnh(20%, 8em)
+                float:  left
+                padding:    1em
+                box-sizing: border-box
+                color:  #fff
+                span
+                    font-size:  1.3em
+            li:first-child
+                margin-left:    40%
+            li:nth-child(even)
+                color:  #000
+
+
+        .wrapper
+            height: 16em
+
+    .process
+        background-image: url(../imgs/uiBack.jpg), url(../imgs/uiBack2.png)
+        background-size: cover
+        height: 28em
+        color:  #ffffff
+        ul
+            li
+                @include wnh(20%, 20em)
+                float:  left
+                margin: 2.2%
+                border: 1px solid rgba(255,255,255,0.2)
+                padding:    inherit
+                span
+                    background: rgba(255,255,255,0.1)
+                    @include wnh(100%, 30%)
+                    display: block
+                    position: relative
+                    &:before
+                        content:    ""
+                        @include wnh(5em,4em)
+                        position:   absolute
+                        left:   calc(50% - 2.5em)
+                        top: 1em
+                        @include background-img('../imgs/logo.svg',-58.8em,-15.4em,85em)
+                span.title
+                    font: 1em $bold-font
+                    margin-bottom: 1em
+                    height: auto
+                    &:before
+                        content:    ""
+                        background: none
+                p
+                    background: #fff
+                    @include wnh(100%, 75%)
+                    margin: 0
+                    padding: 1em
+                    color: #000
+                    box-sizing: border-box
+    .testimonial
+        background-image: url(../imgs/testiBack.jpg)
+        background-repeat: no-repeat
+        background-position: center bottom
+        background-size:    contain
+        height: auto
+        padding-bottom: 30%
+    
+/* form */
+form.hireNowForm
+    @include wnh(100%,100%)
+    background: #000
+    position: fixed
+    top: 0
+    opacity: 1
+    z-index: 100
+    left: 100%
+    padding: 10em
+    box-sizing: border-box
+    z-index: 10000
+    
+    .close
+        display: block
+        cursor: pointer
+        @include wnh(3em,3em)
+        position: absolute
+        top: 1em
+        right: 1em
+        &:before, &:after
+            content:    ""
+            position: absolute
+            top: 1.35em
+            right: 0.5em
+            @include wnh(2em, 0.1em)
+            display: block
+            transform: rotate(45deg)
+            background: #fff
+        &:after
+            transform: rotate(-45deg)
+    .formheader
+        margin: 3em 0 0 0
+        fieldset
+            border: none
+            padding: 0
+            display: none
+            label 
+                font-size: 1.2em
+                color: $white
+                margin: 0 1em 0 0
+            input
+                border: none
+                background: transparent
+                border-bottom: 3px solid $yellow
+                height: 50px
+                padding: 1em 0.5em
+                box-sizing: border-box
+                font-size: 2em
+                color: $white
+                display: block
+                width: 100%
+            .method-input
+                opacity: 0
+                height: 0
+                border: none
+                padding: 0
+                margin: 0
+        .final-review
+            display: none
+        .final-review.active
+            display: block    
+        fieldset.active
+            display: block
+    .hirevalue
+        margin: 2em 0 0 0
+        .form-value
+            width: 32% 
+            margin: 0 2% 1em 0
+            display: none
+            float: left
+            &:nth-child(3n)
+                margin-right: 0 
+            input
+                font-size: 1.2em
+                color: $input-color    
+            label
+                font-size: 1em
+                color: $white
+                margin: 0 1em 0 0 
+
+        .form-value.active
+            display: block
+    .tabs-cont
+        color: $white
+        text-align: right
+        float: right
+        opacity: 0.5
+        display: none
+    .pref-method
+        color: $white
+        span
+            padding: 5px 0 0 0
+            display: inline-block
+        .onoffswitch
+            position: relative
+            width: 139px
+            -webkit-user-select: none
+            -moz-user-select: none
+            -ms-user-select: none
+            display: inline-block
+            vertical-align: bottom
+            margin: 0 20px
+            height: 40px
+        .onoffswitch-checkbox 
+            display: none !important
+        .onoffswitch-label
+            display: block 
+            overflow: hidden
+            cursor: pointer
+            height: 5px 
+            padding: 0
+            line-height: 5px
+            border: 0px solid #FFFFFF
+            border-radius: 30px
+            background-color: #fec021
+            margin: 30px 0 0 15px !important
+            &:before 
+                content: ""
+                display: block
+                width: 30px
+                height: 30px
+                margin: 0
+                background: #FEC021
+                position: absolute 
+                top: 17px
+                bottom: 0
+                right: 0px
+                border-radius: 30px
+        .onoffswitch-checkbox:checked + .onoffswitch-label
+            background-color: #FEC021
+        .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before 
+            border-color: #FEC021
+        .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner 
+            margin-left: 0
+        .onoffswitch-checkbox:checked + .onoffswitch-label:before 
+            right: 110px
+            background-color: #FEC021
+
+form.active
+    left: 0
+    top: 0
+    -webkit-transition: 0.5s
+    transition: 0.5s
+
+html.active
+    height: 100%
+    overflow: hidden
+.hireNowBut
+    background: #fdc700
+    width: 10em
+    height: 3em
+    line-height: 3em
+    border-radius: 3em
+    color:  black
+    cursor: pointer
+    position: static
+    transition: width 1s, height 1s, transform 1s, border-radius 1s, background 1s, border 1s  ease
+    text-align: center
+    display: inline-block
+    margin-top: 1em
+    &:hover
+        background: #fff
+        color: #000
+        border-radius: 0
+
+
+
+@media all and (min-width: 768px) and (max-width: 980px)
+    .wp
+        .innerbanner
+            &:before
+                background-size: 165%
+            height: 42em
+            .title 
+                top: 9%
+            .points
+                top: 18em
+            .hirenow 
+                p
+                    width: 41%  
+        .why
+            ul
+                li
+                    height: 12em
+    form.hireNowForm
+        padding: 5em
+
+
+@media all and (min-width:  320px) and (max-width:767px)
+    .hireNowBut
+        width: 4em
+        height: 4em
+        display: block
+        right: 1em
+        bottom: 1em
+        line-height: 4em
+        white-space: no-wrap
+        overflow: hidden
+        position: fixed
+        z-index: 1000
+    form.hireNowForm
+        padding: 3em
+        overflow-y: scroll     
+
+
+@media all and (min-width:  320px) and (max-width: 567px)
+    .wp
+        .sectionWPadding 
+            padding: 2em 0
+        .innerbanner 
+            &:before
+                background-size: 250%
+            height: 41em
+            padding: 0 1em
+            z-index: 1
+            .title 
+                top: 7%
+                font-size:  2rem
+                font-weight: 100
+                left: calc(28%)
+                span
+                    font-size: 0.3em
+            .points
+                top: 11em 
+                height: 15em
+                li
+                    width: 100%
+                    text-align: left
+                    height: 3.5em
+                    &:before
+                        left: 0
+                        width: 5em
+                        height: 3em
+                        background-position: -55.5em -14.8em
+                        background-size: 80em
+                    span
+                        top: inherit
+                        margin-left: 5em
+                        display: block
+            .hirenow 
+                width: calc(100% - 25px)
+                padding: 1em 0
+                p
+                    width:  100%
+                ul
+                    width:  100%
+                    text-align: center
+                    li
+                        float: none
+                        display: inline-block
+        .step
+            ul
+                top: 0
+                li
+                    width: 50%
+                    padding: 5%
+                    span
+                        margin-bottom: 1em
+        .why
+            .wrapper
+                height: auto
+            h2
+                width:  100%
+            ul
+                position: static
+                li
+                    width:  100%
+                    height: auto
+                    float: none
+        .process 
+            float: left
+            width:  100%
+            height: auto
+            background-size: inherit
+            background-repeat: no-repeat
+            background-color: #111634
+            ul 
+                li
+                    width: 90%
+                    margin-left: 5%
+                    margin-right: 5%
+        .testimonial 
+            padding-bottom: 30%
+    footer.sectionWPadding
+        text-align: center
+        .social
+            position: static
+            display: block
+            margin: 1.5em 0 0 0
+            text-align: center
+            float: none
+            width:  100%
+            li
+                float: none
+                display: inline-block
+                margin: 0
+    form.hireNowForm            
+        .hirevalue
+            .form-value
+                width: 100% 
+                margin: 0 0 1em 0
+
+
+@media all and (min-width:568px) and (max-width: 767px)
+    .wp
+        .innerbanner 
+            height: 30em        
+            .title
+                font-size: 3em
+                left: calc(36%)
+                top: 4%
+            .points 
+                top: 11em
+            .hirenow 
+                padding: 1em 0
+                p
+                    width: 45%
+                    margin: 0
+        .why
+            padding: 2em 0
+            .wrapper
+                height: 30em
+            h2
+                width: 100%
+                text-align: center
+            ul
+                position: static
+                margin-top: 1em
+                li
+                    width:  33.33%
+                    &:first-child
+                        margin-left: 0
+        .process 
+            height: 46em
+            ul
+                li
+                    width: 45%
+
+
+footer.sectionWPadding
+    padding: 2em !important
+    span
+        position: static
+        margin: 0 0 2em 0
+    img
+        position: static
+        display: inline-block
+        vertical-align: middle
+        height: 30px
+    .social
+        position: static
+    
+/* design css completed */
+
+
+/* Magento Start */
+
+.magento
+    .innerbanner 
+        .title 
+            &:before
+                background-position: -49.6em -7.5em
+
+.psdtohtml
+    ul.point
+        padding-top: 5em
+        position: relative
+        li
+            padding: 1.5em
+            height: 13em
+        &:before
+            content:    ""
+            background: #cacaca
+            width:  50%
+            height: 0.05em
+            position:   absolute
+            left:   50%
+            transform:  translateX(-50%)
+            top:   2.5em
+.reachus
+    .sectionWPadding.process
+        padding: 0
+        .reachus-banner
+            display: block
+            padding: 3em 0
+            margin-bottom: 0em
+            p
+                font-size: 4rem
+                margin: 0
+            a
+                color: #000
+        .google-map-container
+            display: block
+            height: 450px
+            margin-top: 3em
+    form
+        > div
+            width: 48%
+            float: left
+            margin: 0 2% 0.5rem 0
+            border-bottom: 1px solid #d1d1d1
+            padding: 0.5em
+            box-sizing: border-box
+            text-align: left
+            position: relative
+            &:nth-child(2n)
+                margin-right: 0
+            .cont-icon
+                width: 20px
+                height: 30px
+                background: url(../imgs/logo.svg) left top no-repeat
+                display: inline-block
+                vertical-align: top
+                background-size: 50em
+                opacity: 0.3
+            input, textarea
+                display: inline-block
+                width: calc(100% - 30px)
+                border: none
+                vertical-align: bottom
+                font: 1em "proxima"
+                margin: 0
+            input + .bar, textarea + .bar    
+                content: ""
+                position: absolute
+                width: 0%
+                height: 2px
+                background: #c4178d
+                display: block
+                bottom: -1px
+                left: 0
+                transition: 0.5s ease all
+                -moz-transition: 0.5s ease all 
+                -webkit-transition: 0.5s ease all
+            input:focus + .bar, textarea:focus + .bar
+                width: 100%
+            .name-icon
+                background-position: -198px -635px 
+            .email-icon
+                background-position: -81px -635px
+            .phone-icon
+                background-position: -119px -635px
+            .skype-icon
+                background-position: -159px -635px
+            .company-icon
+                background-position: -43px -635px
+            .captcha-icon
+                background-position: -3px -635px
+            .brief-icon
+                background-position: -237px -637px 
+        .text-box-main
+            padding: 0 
+            border: none
+            > div
+                margin: 0 2% 0.5rem 0
+                border-bottom: 1px solid #d1d1d1
+                padding: 0.5em
+                box-sizing: border-box  
+                position: relative
+                &:last-child 
+                    input
+                        width: calc(100% - 130px)
+                .captcha-img
+                    position: absolute
+                    right: 0
+                    top: 0.5em
+                    opacity: 0.3  
+
+        button
+            background: transparent
+            cursor: pointer
+            border: solid 1px #333333
+            text-transform: uppercase
+            color: #333333
+            padding: .8rem 1.5rem
+            margin: 5em 0
+            font-weight: 600
+            z-index: 1
+            width: 100%
+            overflow: hidden
+            position: relative
+            -webkit-backface-visibility: hidden
+            -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1)
+            transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1)
+            -webkit-transition: border-color 0.4s, color 0.4s
+            transition: border-color 0.4s, color 0.4s
+            &:before
+                -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1)
+                transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1)
+                content: ''
+                position: absolute
+                top: 0
+                left: 0
+                width: 100%
+                height: 100%
+                background: #333333
+                z-index: -1
+                opacity: 0
+                -webkit-transform: scale3d(0.7, 1, 1)
+                transform: scale3d(0.7, 1, 1)
+                -webkit-transition: -webkit-transform 0.4s, opacity 0.4s
+                transition: transform 0.4s, opacity 0.4s
+                -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1)
+                transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1)
+            &:hover,&:focus
+                color: #ffffff
+                border-color: #333333
+                width: 100%
+                &:before
+                    opacity: 1
+                    -webkit-transform: translate3d(0, 0, 0)
+                    transform: translate3d(0, 0, 0)
+
+.work
+    .sectionWPadding.process
+        padding: 0
+        .work-banner
+            background: url(../imgs/work.svg) rgb(20, 30, 60)
+            display: block
+            padding: 12em 0
+            margin-bottom: 0em
+            color: $white
+            p
+                font-size: 4rem
+                line-height: 3.5rem
+                margin: 0
+        .work-list
+            width: 100%
+            margin: 0
+            float: left
+            li
+                width: 33.33%
+                margin: 0
+                display: block
+                float: left
+                position: relative
+                overflow: hidden
+                img
+                    width: 100%
+                    display: block
+                    -webkit-transition: all 350ms ease
+                    -moz-transition: all 350ms ease
+                    transition: all 350ms ease
+                .work-info
+                    position: absolute
+                    left: 0
+                    color: $white
+                    top: 50px 
+                    opacity: 0
+                    width: 100%
+                    height: 100%
+                    display: flex
+                    flex-direction: column
+                    align-items: center
+                    text-align: center
+                    justify-content: center
+                    -webkit-transition: all 250ms ease
+                    -moz-transition: all 250ms ease
+                    transition: all 250ms ease
+                    z-index: 10
+                    &:after
+                        content: ""
+                        width: 100%
+                        height: 100%
+                        background: rgba(0,0,0,0.9)
+                        display: block
+                        position: absolute
+                        z-index: -1
+                    p
+                        font-size: 2rem
+                        margin: 0
+                    span 
+                        font-size: 1rem
+
+                &:hover
+
+                    img
+                        -moz-transform: scale(1.1)
+                        -webkit-transform: scale(1.1)
+                        transform: scale(1.1)
+                    .work-info
+                        opacity: 1
+                        top: 0
+                        &:after
+                            -moz-transform: scale(1.1)
+                            -webkit-transform: scale(1.1)
+                            transform: scale(1.1)
+.new-contact
+    font-size: 2em
+    color: $white
+    line-height: 1.5em
+    cursor: pointer
+    .form-field
+        color: rgba(255,255,255,0.5)
+        border-bottom: 2px solid rgba(255,255,255,0.5)
+        position: relative
+        .input-field
+            position: absolute
+            left: -10px
+            top: 5px
+            height: 50px
+            width: 400px
+            box-shadow: 0px 0px 45px rgba(0, 0, 0, 0.08)
+            background: $white
+            input
+                border: none
+                margin: 0
+                padding: 1em
+                height: 50px
+                display: block
+                box-sizing: border-box
+                font-size: 0.8em
+                width: 350px
+                float: left
+            .button
+                background: #333
+                color: $white
+                width: 50px
+                height: 50px
+                display: block
+                float: left
+                line-height: 50px
+                font-size: 1em  
+                text-align: center  

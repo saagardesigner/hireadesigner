@@ -1,0 +1,187 @@
+@mixin fontFace($fontname) 
+    @font-face
+        font-family: $fontname
+        src: url('../fonts/'+$fontname+'.eot')
+        src: url('../fonts/'+$fontname+'.eot?#iefix') format('embedded-opentype'), url('../fonts/'+$fontname+'.woff') format('woff'), url('../fonts/'+$fontname+'.ttf') format('truetype'), url('../fonts/'+$fontname+'.svg#fontname') format('svg')
+        font-weight: normal
+        font-style: normal
+    
+@mixin doAnimate($property,$delay,$feel,$time)
+    -webkit-transition: $property $delay $feel $time
+    -moz-transition: $property $delay $feel $time
+    -o-transition: $property $delay $feel $time
+    transition: $property $delay $feel $time
+
+@mixin background-img($imgName,$lPos,$rPos,$size)
+    background-image: url($imgName)
+    background-repeat:  no-repeat
+    background-position:    $lPos $rPos
+    @if $size != null
+        background-size:    $size 
+        
+    
+@mixin  subNavBack($count,$lPos,$rPos,$size)
+    @for $i from 1 through $count
+        li:nth-Child(#{$i}) a
+            @include background-img('../imgs/logo.svg',-($i - 1)*$lPos,$rPos,$size)
+            
+        
+@mixin subNav-back-pos($count,$lPos,$rPos)
+    @for $i from 1 through $count
+        li:nth-Child(#{$i}) a span
+            background-position:   -($i - 1)*$lPos   $rPos
+        
+        
+@mixin wnh($w,$h)
+    width:  $w
+    height: $h
+    
+@mixin setPos($pos,$top,$left)
+    position:   $pos
+    top:    $top
+    left:   $left
+    
+@mixin setRightPos($pos,$top,$right)
+    position:   $pos
+    top:    $top
+    right:   $right
+    
+
+
+@mixin  linx($link,$visit,$hover,$active)
+    a
+        color:  $link
+        cursor: pointer
+        &:visited
+            color:  $visit
+            background: #e2e8ed
+        &:hover
+            color:  $hover
+            background: #e2e8ed
+            border-radius:  3em
+            
+        &:active
+            color:  $active
+
+@mixin on-circle($item-count,$deg, $circle-size, $width, $height, $item-size,$item-x,$item-y, $bg-size,$bg-img-size,$bg-img-x,$bg-img-y,$pad,$rowSize,$border-radius) 
+    position: relative
+    width:  $width
+    height: $height
+    margin: 0 auto
+    padding: $pad 0
+    border-radius: $border-radius
+    list-style: none
+    background: url(../imgs/logo.svg) no-repeat $bg-img-x $bg-img-y
+    background-size: $bg-img-size
+    > *
+        display: block
+        position: absolute
+        top:  50%
+        left: 50%
+        width:  $item-size
+        height: $item-size
+        margin: -($item-size / 2)
+            
+   
+    $angle: (360 / $item-count)
+    $rot: $deg
+    
+    @for $i from 1 through $item-count 
+        li:nth-of-type(#{$i})
+            background: url(../imgs/logo.svg) no-repeat $item-x * $i $item-y+$rowSize
+            transform: rotate($rot * 1deg) translate($circle-size / 2) rotate($rot * -1deg)
+            background-size: $bg-size
+            $rot: $rot + $angle
+    
+@mixin on-circle-responsive($item-count, $item-x,$item-y,$backSize)
+    @for $i from 1 through $item-count 
+        li:nth-of-type(#{$i})
+            &:after
+                content:    ""
+                background: url(../imgs/logo-res.svg) no-repeat
+                background-position:    $item-x * $i $item-y
+                background-size: $backSize
+                
+
+@mixin dropdown($num)
+    @for $i from 1 through $num
+        li:nth-Child(#{$i})
+            width:  100% / $num
+        li:nth-Child(#{$i}) a
+            background: url(../imgs/logo.svg) no-repeat
+            background-position: -($i - 1)*8em   -29em
+            background-size:    52em
+            width:  8em
+            margin: 0 auto
+
+
+
+@mixin portSlider($frames, $static, $animation-name)
+    $animating: (100% - $frames * $static) / ($frames - 1)
+
+    @for $i from 1 through $frames
+        figure:nth-of-type(#{$i})
+            left:   $i  * 100%  - 100%
+
+    @keyframes #{$animation-name}
+        @for $i from 0 to $frames
+            $current-frame: $i * $static + $i * $animating
+            $next-frame: ($i + 1) * $static + $i * $animating
+            
+            #{$current-frame}
+                left:   $i * -100%
+            
+    animation:  $animation-name 8s infinite
+    -webkit-animation:  $animation-name 8s  infinite
+    -o-animation:   $animation-name 8s  infinite
+    -moz-animation: $animation-name 8s  infinite
+
+
+@mixin clientSlider($frames, $static, $animation-name)
+    $animating: (100% - $frames * $static) / ($frames - 1)
+    @keyframes #{$animation-name}
+        @for $i from 0 to $frames
+            $current-frame: $i * $static + $i * $animating
+            $next-frame: ($i + 1) * $static + $i * $animating
+            #{$current-frame}
+                left:   $i * -100%
+            
+    animation:  $animation-name 16s infinite
+    -webkit-animation:  $animation-name 16s  infinite
+    -o-animation:   $animation-name 16s  infinite
+    -moz-animation: $animation-name 16s  infinite
+
+@mixin gradientBack($color1,$color2)
+    background: $color1
+    background: -webkit-linear-gradient(left bottom, $color1, $color2)
+    background: -o-linear-gradient(bottom left, $color1, $color2)
+    background: -moz-linear-gradient(bottom left, $color1, $color2)
+    background: linear-gradient(to bottom left, $color1, $color2)
+
+@mixin transition()
+    -webkit-transition: 0.2s ease
+    transition: 0.2s ease
+
+@mixin arrow($direction,$color,$val)
+    @if $direction  ==  top
+        border-left:    $val solid transparent
+        border-right:    $val solid transparent
+        border-bottom:    $val solid $color
+        border-top:    $val solid transparent
+    @else if $direction == right
+        border-left:    $val solid $color
+        border-right:    $val solid transparent
+        border-bottom:    $val solid transparent
+        border-top:    $val solid transparent
+    @else if $direction == left
+        border-left:    $val solid transparent
+        border-right:    $val solid $color
+        border-bottom:    $val solid transparent
+        border-top:    $val solid transparent
+    @else
+        border-left:    $val solid transparent
+        border-right:    $val solid transparent
+        border-bottom:    $val solid transparent
+        border-top:    $val solid $color   
+    
+
